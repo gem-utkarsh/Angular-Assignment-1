@@ -1,0 +1,252 @@
+<div class="container col-lg-6 rounded shadow py-3 form-invalid form-style">
+  <form [formGroup]="ReactiveForm" (ngSubmit)="onSubmit()">
+    <div class="form-group mb-3">
+      <label for="username">Name<span class="required-star">*</span></label>
+      <input
+        type="text"
+        class="form-control"
+        id="username"
+        name="username"
+        formControlName="username"
+      />
+      <small class="text-danger">
+        <div
+          *ngIf="
+            (ReactiveForm.get('username')?.touched &&
+              ReactiveForm.get('username')?.invalid && ReactiveForm.get('username')?.value.length===0) ||
+            (isSubmitted && ReactiveForm.get('username')?.invalid)
+          "
+          class="form-control-feedback"
+        >
+          This field is required!
+        </div>
+        <div
+          *ngIf="ReactiveForm.get('username')?.errors?.['pattern'] && ReactiveForm.get('username')?.invalid"
+          class="form-control-feedback"
+        >
+          Only letters and space are allowed. No special characters or digits!
+        </div>
+      </small>
+    </div>
+    <div class="formgroup mb-3">
+      <span>Gender:<span class="required-star">*</span></span>
+      <div class="form-check">
+        <div *ngFor="let gender of genders">
+          <input
+            class="form-check-input"
+            type="radio"
+            value="{{ gender.value }}"
+            name="gender"
+            id="{{ gender.id }}"
+            formControlName="gender"
+          />
+          <label class="form-check-label" for="{{ gender.id }}">
+            {{ gender.value }}
+          </label>
+        </div>
+      </div>
+      <small class="text-danger">
+        <div
+          *ngIf="ReactiveForm.get('gender')?.invalid && isSubmitted"
+          class="form-control-feedback"
+        >
+          Please choose a gender!
+        </div>
+      </small>
+    </div>
+    <div class="form-group mb-3">
+      <label for="email"
+        >Email address<span class="required-star">*</span></label
+      >
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        formControlName="email"
+      />
+      <small class="text-danger">
+        <div
+          *ngIf="
+            (ReactiveForm.get('email')?.touched &&
+              ReactiveForm.get('email')?.invalid && ReactiveForm.get('email')?.value.length===0) ||
+            (isSubmitted && ReactiveForm.get('email')?.invalid)
+          "
+          class="form-control-feedback"
+        >
+          This field is required!
+        </div>
+        <div
+          *ngIf="ReactiveForm.get('email')?.errors?.['pattern']"
+          class="form-control-feedback"
+        >
+          Email is Invalid!
+        </div>
+      </small>
+    </div>
+    <div class="form-group mb-3">
+      <label for="contact" class="form-label"
+        >Mobile Number<span class="required-star">*</span></label
+      >
+      <input
+        type="number"
+        min="0"
+        class="form-control"
+        id="contact"
+        name="contact"
+        formControlName="contact"
+      />
+      <small class="text-danger">
+        <div
+          *ngIf="
+            (ReactiveForm.get('contact')?.touched &&
+              ReactiveForm.get('contact')?.invalid && ReactiveForm.get('contact')?.value==null) ||
+            (isSubmitted && ReactiveForm.get('contact')?.invalid)
+          "
+          class="form-control-feedback"
+        >
+          This field is required!
+        </div>
+        <div
+          *ngIf="ReactiveForm.get('contact')?.errors?.['pattern']"
+          class="form-control-feedback"
+        >
+          Enter a 10-digit Indian mobile number!
+        </div>
+      </small>
+    </div>
+    <div class="formgroup mb-3">
+      <span>Category: <span class="required-star">*</span> &nbsp;</span>
+      <select class="custom-select mb-3" formControlName="category">
+        <option value="">Choose Category:</option>
+        <option *ngFor="let category of Category">
+          {{ category }}
+        </option>
+      </select>
+      <small class="text-danger">
+        <div
+          *ngIf="
+            (ReactiveForm.get('category')?.touched &&
+              ReactiveForm.get('category')?.invalid) ||
+            (isSubmitted && ReactiveForm.get('category')?.invalid)
+          "
+          class="form-control-feedback"
+        >
+          Please choose a category!
+        </div>
+      </small>
+    </div>
+    <div class="formgroup mb-3" formArrayName="selectedTechnology">
+      <span>Technology<span class="required-star">*</span></span>
+      <div *ngFor="let data of technology">
+        <label>
+          <input
+            type="checkbox"
+            class="formControl"
+            (change)="technologySelected($event, data)"
+          />
+          {{ data }}
+        </label>
+      </div>
+      <small class="text-danger">
+        <div
+          *ngIf="
+            ReactiveForm.get('selectedTechnology')?.value.length === 0 &&
+            isSubmitted
+          "
+          class="form-control-feedback"
+        >
+          Please check atleast one technology!
+        </div>
+      </small>
+    </div>
+    <div class="formgroup mb-3">
+      <span
+        >Upload your Profile Picture:<span class="required-star">*</span></span
+      ><br />
+      <div class="custom-file">
+        <input
+          type="file"
+          class="custom-file-input"
+          accept=".jpg,.jpeg,.png"
+          formControlName="profilePhoto"
+          (change)="onImageChangeFromFile($event)"
+        />
+      </div>
+      <small class="text-danger">
+        <div
+          *ngIf="isSubmitted && ReactiveForm.get('profilePhoto')?.invalid"
+          class="form-control-feedback"
+        >
+          Please upload your profile picture!
+        </div>
+        <div
+          *ngIf="
+            ReactiveForm.get('profilePhoto')?.touched &&
+            !correctFileType &&
+            ReactiveForm.get('profilePhoto')?.dirty
+          "
+          class="form-control-feedback"
+        >
+          Only JPEG, JPG and PNG file types are allowed!
+        </div>
+      </small>
+    </div>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="ReactiveForm.valid ? open(content) : onValidate()"
+    >
+      Preview
+    </button>
+  </form>
+</div>
+<div>
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">User Profile Data</h4>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <ul>
+        <li>Name: &nbsp;{{ ReactiveForm.value.username }}</li>
+        <li>Gender: &nbsp;{{ ReactiveForm.value.gender }}</li>
+        <li>Email: &nbsp;{{ ReactiveForm.value.email }}</li>
+        <li>Contact: &nbsp;{{ ReactiveForm.value.contact }}</li>
+        <li>Category: &nbsp;{{ ReactiveForm.value.category }}</li>
+        <li>Technology: &nbsp;{{ ReactiveForm.value.selectedTechnology }}</li>
+        <li>
+          Profile Picture:
+          <img
+            [src]="profilePhoto"
+            (load)="handleImageLoad()"
+            height="80%"
+            width="20%"
+            style="object-fit: cover"
+          />
+        </li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="submit"
+        class="btn btn-outline-dark"
+        (click)="onSubmit(); modal.close()"
+      >
+        Submit
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        (click)="modal.close()"
+      >
+        Cancel
+      </button>
+    </div>
+  </ng-template>
+</div>

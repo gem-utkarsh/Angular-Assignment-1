@@ -1,0 +1,20 @@
+
+.form-style{
+	max-width: 500px;
+	padding: 10px 20px;
+	background: #f4f7f8;
+	margin: 10px auto;
+	padding: 20px;
+	background: #f4f7f8;
+	border-radius: 8px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.form-style input[type="submit"]:hover,
+.form-style input[type="button"]:hover
+{
+	background: #109177;
+}
+.required-star{
+	color: #ff0000;
+}

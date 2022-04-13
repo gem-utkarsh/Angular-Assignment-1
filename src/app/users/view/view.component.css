@@ -1,0 +1,7 @@
+th,td{
+    border: 2px solid black;
+    text-align: center;
+}
+tr:hover {
+    background-color: #dbd8d8;
+}
